@@ -1,6 +1,6 @@
 Name:		jscoverage
 Version:	0.5.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	JSCoverage is a tool that measures code coverage for JavaScript programs.
 
 Group:		unknown
@@ -8,6 +8,7 @@ License:	GPLv2
 URL:		http://siliconforks.com/jscoverage/
 Source0:	http://siliconforks.com/jscoverage/download/jscoverage-0.5.1.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  /usr/bin/g++
 
 %description
 
@@ -39,6 +40,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc
 
 %changelog
+* Wed Oct 12 2011  <braeuer.jens@googlemail.com> - 0.5.1-2
+- Update dependency information for SL6.
+
 * Mon Jul 25 2011 Jens Braeuer <jens@numberfour.eu> - 0.5.1-1
 - Initial packaging.
 
