@@ -21,6 +21,7 @@ build () {
 
     mkdir -p ${dist}/{RPMS,BUILD}
     rpmbuild --verbose \
+	--define "_rpmdir ${dist}/RPMS" \
 	--define "_sourcedir ${root}" \
 	--define "_topdir ${dist}" \
 	-bb "${root}/jscoverage.spec"
