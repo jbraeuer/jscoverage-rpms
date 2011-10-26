@@ -3,8 +3,6 @@
 usage () {
       echo "$0: a small wrapper to generate a rpm."
       echo "Usage: $0 -d"
-      echo "Options:"
-      echo "Note that -d is meaningless, it stands for 'do it'..."
 }
 
 download () {
