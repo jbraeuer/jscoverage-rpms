@@ -1,6 +1,6 @@
 Name:		jscoverage
 Version:	0.5.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	JSCoverage is a tool that measures code coverage for JavaScript programs.
 
 Group:		unknown
