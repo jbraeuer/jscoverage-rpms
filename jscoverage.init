@@ -38,7 +38,7 @@ start() {
 
 stop() {
     echo -n $"Stopping jscoverage: "
-    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile "${PIDFILE}" --name "${NAME}"
+    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile "${PIDFILE}" --exec "${DAEMON}"
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/jscoverage
