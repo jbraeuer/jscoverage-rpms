@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# jscoverage - Startup script for jscoverage-server
+
+# chkconfig: 35 85 15
+# description: JSCoverage Server
+# processname: jscoverage-server
+# config: /etc/jscoverage.conf
+# pidfile: /var/run/jscoverage.pid
+
+. /etc/rc.d/init.d/functions
+
+DAEMON="/usr/bin/jscoverage-server"
+PIDFILE="/var/run/jscoverage/jscoverage.pid"
+CONFIGFILE="/etc/jscoverage.conf"
+NOINSTRUMENT="/etc/jscoverage.no-instrument"
+JSCOVERAGE_USER=build
+JSCOVERAGE_GROUP=build
+PORT=8888
+IPADDRESS=0.0.0.0
+DOCUMENTROOT="/var/lib/jscoverage/root"
+REPORTDIR="/var/lib/jscoverage/reports"
+
+. "$CONFIGFILE" || true
+
+build_no_instrument() {
+    ruby -ne ' if $_ =~ /\S+/; print "--no-instrument #{$_.strip} "; end' < "${NOINSTRUMENT}"
+}
+
+start() {
+    echo -n $"Starting jscoverage: "
+    start-stop-daemon --chuid "${JSCOVERAGE_USER}:${JSCOVERAGE_GROUP}" --pidfile "${PIDFILE}" --make-pidfile --background --start --exec "${DAEMON}" -- \
+	--encoding=UTF-8 --port="${PORT}" --ip-address="${IPADDRESS}" --document-root="${DOCUMENTROOT}" --report-dir="${REPORTDIR}" $(build_no_instrument)
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/jscoverage
+}
+
+stop() {
+    echo -n $"Stopping jscoverage: "
+    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile "${PIDFILE}" --name "${NAME}"
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/jscoverage
+}
+
+restart() {
+    "$0" stop
+    "$0" start
+}
+
+RETVAL=0
+
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    restart|reload|force-reload)
+	restart
+	;;
+    condrestart)
+	[ -f /var/lock/subsys/jscoverage ] && restart || :
+	;;
+    status)
+	status -p "${PIDFILE}" "${DAEMON}"
+	RETVAL=$?
+	;;
+    *)
+	echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+	RETVAL=1
+esac
+
+exit $RETVAL
